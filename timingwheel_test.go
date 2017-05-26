@@ -4,8 +4,6 @@ import (
 	"log"
 	"testing"
 	"time"
-
-	"github.com/liudanking/timer"
 )
 
 func TestTimingWheel(t *testing.T) {
@@ -41,7 +39,7 @@ func TestTimingWheel(t *testing.T) {
 }
 
 func TestTimingWheel2(t *testing.T) {
-	tw, err := timer.NewTimingWheel(1 * time.Millisecond)
+	tw, err := NewTimingWheel(1 * time.Millisecond)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -90,12 +90,13 @@ func (tw *TimingWheel) addJob(level, slotIdx int, job *Job) error {
 }
 
 func (tw *TimingWheel) Run() {
-	tick := time.Tick(tw.tickDur)
+	ticker := time.NewTicker(tw.tickDur) // time.Tick(tw.tickDur)
 	for {
 		select {
-		case <-tick:
+		case <-ticker.C:
 			tw.tick()
 		case <-tw.exit:
+			ticker.Stop()
 			log.Println("timingwheel exit")
 			return
 		}
