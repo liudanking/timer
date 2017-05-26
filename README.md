@@ -27,7 +27,8 @@ func main() {
 		tw.AddFunc(delay,
 			func(createTime time.Time, i int, delay time.Duration) func() {
 				return func() {
-					log.Printf("job %d with delay %v triggerd, time diff: %v", i, delay, time.Now().Sub(createTime))
+					log.Printf("job %d with delay %v triggerd, time diff: %v",
+						i, delay, time.Now().Sub(createTime))
 				}
 			}(time.Now(), i, delay),
 		)
@@ -36,6 +37,7 @@ func main() {
 	time.Sleep(15 * time.Second)
 	tw.Close()
 }
+
 
 ```
 
