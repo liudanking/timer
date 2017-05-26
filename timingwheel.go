@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+const (
+	LevelCnt = 7
+)
+
 var (
 	ErrWheelLevelInvalid = errors.New("timing wheel level invalid, should between [1, 7]")
 	ErrSlotInvalid       = errors.New("slot index invalid")
@@ -23,20 +27,17 @@ type TimingWheel struct {
 	exit     chan struct{}
 }
 
-func NewTimingWheel(levelCnt int, tickDur time.Duration) (*TimingWheel, error) {
-	if levelCnt < 1 || levelCnt > 7 {
-		return nil, ErrWheelLevelInvalid
-	}
+func NewTimingWheel(tickDur time.Duration) (*TimingWheel, error) {
 	if tickDur <= 0*time.Second {
 		return nil, ErrTickDurInvalid
 	}
 	tw := &TimingWheel{
-		levelCnt: levelCnt,
+		levelCnt: LevelCnt,
 		tickDur:  tickDur,
-		wheels:   make([]*levelWheel, levelCnt),
+		wheels:   make([]*levelWheel, LevelCnt),
 		exit:     make(chan struct{}),
 	}
-	for i := 0; i < levelCnt; i++ {
+	for i := 0; i < LevelCnt; i++ {
 		tw.wheels[i] = newLevelWheel()
 	}
 	return tw, nil
@@ -72,7 +73,7 @@ func (tw *TimingWheel) AddFunc(delay time.Duration, f func()) error {
 			break
 		}
 	}
-	log.Printf("levelSlotIdx:tc:%d %+v", uint64(delay/tw.tickDur), levelSlotIdx)
+	// log.Printf("levelSlotIdx:tc:%d %+v", uint64(delay/tw.tickDur), levelSlotIdx)
 
 	return tw.addJob(level, slotIdx, job)
 }

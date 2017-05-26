@@ -4,10 +4,12 @@ import (
 	"log"
 	"testing"
 	"time"
+
+	"github.com/liudanking/timer"
 )
 
 func TestTimingWheel(t *testing.T) {
-	tw, err := NewTimingWheel(7, 1*time.Millisecond)
+	tw, err := NewTimingWheel(1 * time.Millisecond)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,4 +38,26 @@ func TestTimingWheel(t *testing.T) {
 
 	tw.Close()
 
+}
+
+func TestTimingWheel2(t *testing.T) {
+	tw, err := timer.NewTimingWheel(1 * time.Millisecond)
+	if err != nil {
+		log.Fatal(err)
+	}
+	go tw.Run()
+
+	for i := 0; i < 10; i++ {
+		delay := time.Duration(i+1) * time.Second
+		tw.AddFunc(delay,
+			func(createTime time.Time, i int, delay time.Duration) func() {
+				return func() {
+					log.Printf("job %d with delay %v triggerd, time diff: %v", i, delay, time.Now().Sub(createTime))
+				}
+			}(time.Now(), i, delay),
+		)
+	}
+
+	time.Sleep(15 * time.Second)
+	tw.Close()
 }

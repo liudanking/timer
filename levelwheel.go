@@ -6,8 +6,7 @@ import (
 )
 
 const (
-	SlotCnt  = 256
-	LevelCnt = 7
+	SlotCnt = 256
 )
 
 type levelWheel struct {
